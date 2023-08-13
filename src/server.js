@@ -19,6 +19,7 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use('/peerjs', peerServer);
 app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views')); 
 app.use(express.static('public'));
 app.get('/', (req, res) => {
   res.redirect(`/v1/user`);
