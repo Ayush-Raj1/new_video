@@ -8,12 +8,12 @@
       const ROOM_ID = "<%= roomId %>"
    </script>
    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-   <!-- <script defer src="https://unpkg.com/peerjs@1.3.1/dist/peerjs.min.js"></script> -->
+   <script defer src="https://unpkg.com/peerjs@1.3.1/dist/peerjs.min.js"></script>
    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
    <script src="/socket.io/socket.io.js" ></script>
-   <!-- <link rel="stylesheet" href="style.css"> -->
-   <style>
+   <link rel="stylesheet" href="style.css">
+   <!-- <style>
       .main {
     height: 100vh;
     display: flex;
@@ -118,9 +118,9 @@
     color: #CC3B33;
 }
 
-   </style>
+   </style> -->
    <script src="https://kit.fontawesome.com/c939d0e917.js"></script>
-   <!-- <script src="script.js" defer></script> -->
+   <script src="script.js" defer></script>
    <style>
       #video-grid{
          display: flex;
@@ -192,26 +192,31 @@
    </div>
 </body>
 <!-- Include Peer.js library -->
-<script src="https://unpkg.com/peerjs@1.3.1/dist/peerjs.min.js" ></script>
-<script defer>
+<!-- <script src="https://unpkg.com/peerjs@1.3.1/dist/peerjs.min.js" onload="initializePeer()"></script> -->
+<!-- <script defer>
 var appointments = JSON.parse(localStorage.getItem("userId"));
 console.log(appointments);
-let peer = {};
 const socket = io('/', {
   query: {
     appointmentId: appointments.appointmentId,
   }
 });
 const videoGrid = document.getElementById('video-grid');
-myPeer = new Peer(appointments.userId, {
-  path: '/peerjs',
-  host: '/',
-  port: '3030'
-})
+let myPeer = {};  // Define myPeer globally
+function initializePeer() {
+   myPeer = new Peer(appointments.userId, {
+      path: '/peerjs',
+      host: '/',
+      port: '3030'
+   });
+}
+
+console.log("🚀 ~ file: room.ejs:200 ~ myPeer:", myPeer);
+
+
 let myVideoStream;
 const myVideo = document.createElement('video')
 myVideo.muted = true;
-const peers = {}
 navigator.mediaDevices.getUserMedia({
   video: true,
   audio: true
@@ -359,5 +364,5 @@ const setPlayVideo = () => {
 }
 
 
-</script>
+</script> -->
 </html>

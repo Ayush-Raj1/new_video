@@ -30,11 +30,8 @@ app.get('/v1/user', (req, res) => {
   res.render('user');
 });
 
-app.get('/:room', (req, res) => {
+app.get('/room/:room', (req, res) => {
   const roomIdWithToken = req.params.room || '';
-  if(roomIdWithToken === 'favicon.ico') {
-    return res.redirect('/favicon.ico');
-  }
   const [appointmentId, token] = roomIdWithToken.split('-');
   const expire = Buffer.from(req.query.exp, 'base64').toString('ascii');
   console.log("🚀 ~ file: server.js:40 ~ app.get ~ expire:", expire)
@@ -54,21 +51,26 @@ app.get('/favicon.ico', (req, res) => {
 });
 
 app.post('/generate-link', (req, res, next) => {
-  const { userId, appointmentId } = req.body;
+  try {
+    const { userId, appointmentId } = req.body;
   // In a real-world scenario, you would validate the appointmentId against a database
-  let link;
-  if(validAppointmentIds[appointmentId]) {
-    link = validAppointmentIds[appointmentId];
+    let link;
+    if(validAppointmentIds[appointmentId]) {
+      link = validAppointmentIds[appointmentId];
+    }
+    else {
+      const roomId = `${appointmentId}-${generateRandomToken()}`;
+      const expirationTime = Buffer.from((Date.now() + 5 * 60 * 1000).toString()).toString('base64');
+      console.log("🚀 ~ file: server.js:66 ~ app.post ~ expirationTime:", expirationTime);
+      link = `/room/${roomId}?exp=${expirationTime}`;
+      validAppointmentIds[appointmentId] = link;
+    }
+    // return res.status(200).send(JSON.stringify({}));
+    return res.json({ link });
+
+  } catch (err) {
+    console.log(err);
   }
-  else {
-    const roomId = `${appointmentId}-${generateRandomToken()}`;
-    const expirationTime = Buffer.from((Date.now() + 5 * 60 * 1000).toString()).toString('base64');
-    console.log("🚀 ~ file: server.js:66 ~ app.post ~ expirationTime:", expirationTime);
-    link = `/${roomId}?exp=${expirationTime}`;
-    validAppointmentIds[appointmentId] = link;
-  }
-  // return res.status(200).send(JSON.stringify({}));
-  return res.json({ link });
 })
 
 io.on('connection', socket => {
