@@ -36,7 +36,8 @@ app.get('/:room', (req, res) => {
     return res.redirect('/favicon.ico');
   }
   const [appointmentId, token] = roomIdWithToken.split('-');
-  const expire = atob(req.query.exp);
+  const expire = Buffer.from(req.query.exp, 'base64').toString('ascii');
+  console.log("🚀 ~ file: server.js:40 ~ app.get ~ expire:", expire)
   if (!isValidAppointmentId(appointmentId) || !isValidToken(token) || isLinkExpired(expire, appointmentId)){
     return res.status(400).json({ error: 'Invalid or expired link' });
   }
@@ -61,7 +62,8 @@ app.post('/generate-link', (req, res, next) => {
   }
   else {
     const roomId = `${appointmentId}-${generateRandomToken()}`;
-    const expirationTime = btoa(Date.now() + 5 * 60 * 1000);
+    const expirationTime = Buffer.from((Date.now() + 5 * 60 * 1000).toString()).toString('base64');
+    console.log("🚀 ~ file: server.js:66 ~ app.post ~ expirationTime:", expirationTime);
     link = `/${roomId}?exp=${expirationTime}`;
     validAppointmentIds[appointmentId] = link;
   }
